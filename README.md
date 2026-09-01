@@ -4,7 +4,7 @@
 
 Custom Home Assistant integration for Metropolitan Utilities District customer portal consumption data.
 
-This repository currently uses the test domain `mud_utility_test` so it can be installed beside an existing `mud_utility` integration without sharing entities or long-term statistic IDs.
+This repository uses the Home Assistant domain `mud_utility_test`.
 
 Repository: https://github.com/DuckCowMooQuack/mud_utility_test
 
@@ -71,4 +71,4 @@ This integration stores your M.U.D. username, password, and contract IDs in Home
 
 This is an unofficial integration and is not affiliated with or endorsed by Metropolitan Utilities District.
 
-Before publishing a non-test release, rename the integration directory and manifest domain from `mud_utility_test` to the final public domain, such as `mud_utility`, and update the displayed name.
+The integration imports billing-cycle records into Home Assistant long-term statistics using statistic IDs such as `mud_utility_test:gas_consumption` and `mud_utility_test:water_consumption`.
