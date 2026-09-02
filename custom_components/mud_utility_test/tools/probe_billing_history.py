@@ -115,7 +115,7 @@ async def main():
         args.username
         or input("MUD Username: ")
     )
-    
+
     password = (
         args.password
         or getpass.getpass("MUD Password: ")
