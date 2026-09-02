@@ -8,9 +8,7 @@ from homeassistant.components.sensor import (
     SensorDeviceClass,
     SensorEntity,
 )
-from homeassistant.config_entries import (
-    ConfigEntry,
-)
+from . import MudUtilityTestConfigEntry
 from homeassistant.core import (
     HomeAssistant,
 )
@@ -32,12 +30,12 @@ from .coordinator import (
 
 async def async_setup_entry(
     hass: HomeAssistant,
-    entry: ConfigEntry,
+    entry: MudUtilityTestConfigEntry,
     async_add_entities: AddEntitiesCallback,
 ) -> None:
     """Set up MUD Utilities Test sensors."""
     coordinator: MudDataUpdateCoordinator = (
-        entry.runtime_data
+        entry.runtime_data.coordinator
     )
 
     async_add_entities(
@@ -73,7 +71,7 @@ class MudBaseSensor(
     def __init__(
         self,
         coordinator: MudDataUpdateCoordinator,
-        entry: ConfigEntry,
+        entry: MudDataUtilityTestConfigEntry,
     ) -> None:
         super().__init__(
             coordinator
@@ -105,7 +103,7 @@ class MudConsumptionSensor(
     def __init__(
         self,
         coordinator: MudDataUpdateCoordinator,
-        entry: ConfigEntry,
+        entry: MudUtilityTestConfigEntry,
         utility: str,
     ) -> None:
         super().__init__(
@@ -286,7 +284,7 @@ class MudLastRefreshSensor(
     def __init__(
         self,
         coordinator: MudDataUpdateCoordinator,
-        entry: ConfigEntry,
+        entry: MudUtilityTestConfigEntry,
     ) -> None:
         super().__init__(
             coordinator,
