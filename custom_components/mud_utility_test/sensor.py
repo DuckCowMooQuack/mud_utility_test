@@ -71,7 +71,7 @@ class MudBaseSensor(
     def __init__(
         self,
         coordinator: MudDataUpdateCoordinator,
-        entry: MudDataUtilityTestConfigEntry,
+        entry: MudUtilityTestConfigEntry,
     ) -> None:
         super().__init__(
             coordinator
