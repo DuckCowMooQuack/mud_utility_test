@@ -166,6 +166,12 @@ class MudDataUpdateCoordinator(
             if timestamp is None:
                 continue
 
+            timestamp = timestamp.replace(
+                minute=0,
+                second=0,
+                microsecond=0,
+            )
+
             value = float(value)
 
             cumulative_sum += value
