@@ -5,9 +5,8 @@ from __future__ import annotations
 from collections.abc import Mapping
 from typing import Any
 
-from aiohttp import ClientError
 import voluptuous as vol
-
+from aiohttp import ClientError
 from homeassistant import config_entries
 from homeassistant.config_entries import ConfigFlowResult
 from homeassistant.const import (
@@ -51,13 +50,20 @@ def _validate_contract_ids(
         CONF_GAS_CONTRACT,
         CONF_WATER_CONTRACT,
     ):
-        value = user_input[field].strip()
+        value = str(user_input.get(field, "")).strip()
+        user_input[field] = value
+
+        if not value:
+            continue
 
         if not value.isdecimal():
             errors[field] = "invalid_contract"
-            continue
 
-        user_input[field] = value
+    if (
+        not user_input[CONF_GAS_CONTRACT]
+        and not user_input[CONF_WATER_CONTRACT]
+    ):
+        errors["base"] = "missing_contract"
 
     return errors
 
@@ -124,12 +130,14 @@ class MudUtilityConfigFlow(
                         CONF_PASSWORD
                     ): _PASSWORD_SELECTOR,
 
-                    vol.Required(
-                        CONF_GAS_CONTRACT
+                    vol.Optional(
+                        CONF_GAS_CONTRACT,
+                        default=""
                     ): str,
 
-                    vol.Required(
-                        CONF_WATER_CONTRACT
+                    vol.Optional(
+                        CONF_WATER_CONTRACT,
+                        default=""
                     ): str,
                 }
             ),

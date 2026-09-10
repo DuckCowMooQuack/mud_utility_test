@@ -7,7 +7,6 @@ import logging
 from typing import Any
 
 from aiohttp import ClientError
-
 from homeassistant.components.recorder.models import (
     StatisticData,
     StatisticMeanType,
@@ -97,24 +96,27 @@ class MudDataUpdateCoordinator(
         self,
         data: dict[str, Any],
     ) -> None:
-        """Import all known gas and water billing-cycle history."""
-        self._import_utility_history(
-            utility="gas",
-            history=data["gas"]["history"],
-            statistic_id=GAS_STATISTIC_ID,
-            name="MUD Utilities Test Gas Consumption",
-            unit="TH",
-            unit_class=None,
-        )
+        """Import all known configured billing-cycle history."""
 
-        self._import_utility_history(
-            utility="water",
-            history=data["water"]["history"],
-            statistic_id=WATER_STATISTIC_ID,
-            name="MUD Utilities Test Water Consumption",
-            unit=UnitOfVolume.CENTUM_CUBIC_FEET,
-            unit_class=VolumeConverter.UNIT_CLASS,
-        )
+        if "gas" in data:
+            self._import_utility_history(
+                utility="gas",
+                history=data["gas"]["history"],
+                statistic_id=GAS_STATISTIC_ID,
+                name="MUD Utilities Test Gas Consumption",
+                unit="TH",
+                unit_class=None,
+            )
+
+        if "water" in data:
+            self._import_utility_history(
+                utility="water",
+                history=data["water"]["history"],
+                statistic_id=WATER_STATISTIC_ID,
+                name="MUD Utilities Test Water Consumption",
+                unit=UnitOfVolume.CENTUM_CUBIC_FEET,
+                unit_class=VolumeConverter.UNIT_CLASS,
+            )
 
     def _import_utility_history(
         self,

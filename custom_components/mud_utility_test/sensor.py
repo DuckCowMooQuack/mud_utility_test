@@ -8,7 +8,6 @@ from homeassistant.components.sensor import (
     SensorDeviceClass,
     SensorEntity,
 )
-from . import MudUtilityTestConfigEntry
 from homeassistant.core import (
     HomeAssistant,
 )
@@ -22,7 +21,12 @@ from homeassistant.helpers.update_coordinator import (
     CoordinatorEntity,
 )
 
-from .const import DOMAIN
+from . import MudUtilityTestConfigEntry
+from .const import (
+    CONF_GAS_CONTRACT,
+    CONF_WATER_CONTRACT,
+    DOMAIN,
+)
 from .coordinator import (
     MudDataUpdateCoordinator,
 )
@@ -38,25 +42,34 @@ async def async_setup_entry(
         entry.runtime_data.coordinator
     )
 
-    async_add_entities(
-        [
+    entities: list[SensorEntity] = []
+
+    if entry.data.get(CONF_GAS_CONTRACT):
+        entities.append(
             MudConsumptionSensor(
                 coordinator,
                 entry,
                 "gas",
-            ),
+            )
+        )
+
+    if entry.data.get(CONF_WATER_CONTRACT):
+        entities.append(
             MudConsumptionSensor(
                 coordinator,
                 entry,
                 "water",
-            ),
-            MudLastRefreshSensor(
-                coordinator,
-                entry,
-            ),
-        ]
+            )
+        )
+
+    entities.append(
+        MudLastRefreshSensor(
+            coordinator,
+            entry,
+        )
     )
 
+    async_add_entities(entities)
 
 class MudBaseSensor(
     CoordinatorEntity[
