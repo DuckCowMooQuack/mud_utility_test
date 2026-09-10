@@ -29,5 +29,16 @@
       "already_configured": "This MUD Utilities Test account is already configured.",
       "reauth_successful": "MUD Utilities Test reauthentication was successful."
     }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "MUD Utilities Test options",
+        "description": "Set how often Home Assistant refreshes M.U.D. utility data.",
+        "data": {
+          "update_interval_hours": "Refresh interval in hours"
+        }
+      }
+    }
   }
 }

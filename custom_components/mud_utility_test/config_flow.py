@@ -29,8 +29,12 @@ from .api import (
 )
 from .const import (
     CONF_GAS_CONTRACT,
+    CONF_UPDATE_INTERVAL_HOURS,
     CONF_WATER_CONTRACT,
+    DEFAULT_UPDATE_INTERVAL_HOURS,
     DOMAIN,
+    MAX_UPDATE_INTERVAL_HOURS,
+    MIN_UPDATE_INTERVAL_HOURS,
 )
 
 _PASSWORD_SELECTOR = TextSelector(
@@ -75,6 +79,13 @@ class MudUtilityConfigFlow(
     """Handle a config flow for MUD Utilities Test."""
 
     VERSION = 1
+
+    @staticmethod
+    def async_get_options_flow(
+        _config_entry: config_entries.ConfigEntry,
+    ) -> config_entries.OptionsFlow:
+        """Create the options flow."""
+        return MudUtilityOptionsFlow()
 
     async def async_step_user(
         self,
@@ -221,3 +232,39 @@ class MudUtilityConfigFlow(
             await api.async_fetch_all()
         finally:
             await session.close()
+
+
+class MudUtilityOptionsFlow(config_entries.OptionsFlow):
+    """Handle MUD Utilities Test options."""
+
+    async def async_step_init(
+        self,
+        user_input: dict[str, Any] | None = None,
+    ) -> ConfigFlowResult:
+        """Manage integration options."""
+        if user_input is not None:
+            return self.async_create_entry(
+                title="",
+                data=user_input,
+            )
+
+        return self.async_show_form(
+            step_id="init",
+            data_schema=vol.Schema(
+                {
+                    vol.Required(
+                        CONF_UPDATE_INTERVAL_HOURS,
+                        default=self.config_entry.options.get(
+                            CONF_UPDATE_INTERVAL_HOURS,
+                            DEFAULT_UPDATE_INTERVAL_HOURS,
+                        ),
+                    ): vol.All(
+                        vol.Coerce(int),
+                        vol.Range(
+                            min=MIN_UPDATE_INTERVAL_HOURS,
+                            max=MAX_UPDATE_INTERVAL_HOURS,
+                        ),
+                    )
+                }
+            ),
+        )

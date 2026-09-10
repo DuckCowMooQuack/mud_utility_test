@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import asyncio
 import logging
+from datetime import timedelta
 from typing import Any
 
 from aiohttp import ClientError
@@ -33,7 +34,7 @@ from .api import (
     MudApiError,
     MudAuthError,
 )
-from .const import DOMAIN, UPDATE_INTERVAL
+from .const import DOMAIN
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -55,12 +56,13 @@ class MudDataUpdateCoordinator(
         self,
         hass: HomeAssistant,
         api: MudApi,
+        update_interval: timedelta,
     ) -> None:
         super().__init__(
             hass,
             logger=_LOGGER,
             name=DOMAIN,
-            update_interval=UPDATE_INTERVAL,
+            update_interval=update_interval,
         )
 
         self.api = api
